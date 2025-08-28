@@ -4,7 +4,7 @@ const AmbulanceBooking = require("../model/ambulanceBooking");
 // Common booking logic
 const buildBooking = async (req, res, forUserId) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     const {
       fullName,
@@ -37,10 +37,10 @@ const buildBooking = async (req, res, forUserId) => {
 
 // USER books for self
 exports.userBookAmbulance = async (req, res) => {
-  return buildBooking(req, res, req.user.id);
+  return buildBooking(req, res, req.user._id);
 };
 
-// EMPLOYEE books for others
+
 exports.bookAmbulanceForUser = async (req, res) => {
   const { forUserId } = req.body;
   if (!forUserId) return res.status(400).json({ message: "forUserId is required" });

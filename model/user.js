@@ -13,11 +13,17 @@ const userSchema = new mongoose.Schema({
     enum: ["USER", "ADMIN", "EMPLOYEE"],
     default: "USER"
   },
+ appliedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  forUser: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   isVerified: { type: Boolean, default: true },
   verified:{type:Boolean,default:false},
+  joinDate:{type:String},
+  department:{type:String},
+  address:{type:String},
+  position:{type:String},
   // 🔹 Admin profile fields
   full_name: { type: String },
-  address: { type: String },
+  
   language: { type: String },
   time_zone: { type: String },
   nationality: { type: String },

@@ -1,6 +1,5 @@
 // const janArogyaApplication = require("../model/janArogyaApplication");
 const JanArogyaApplication = require("../model/janArogyaApplication");
-
 const buildApplication = async (req, res, forUserId) => {
   try {
     const { name, aadhar, mobile, state, district } = req.body;
@@ -23,9 +22,9 @@ const buildApplication = async (req, res, forUserId) => {
       mobile,
       state,
       district,
-      appliedBy: req.user.id,
+      appliedBy: req.user._id,
       forUser: forUserId,
-
+        
       income_certificate: req.files?.income_certificate?.[0]?.buffer || null,
       caste_certificate: req.files?.caste_certificate?.[0]?.buffer || null,
       ration_id: req.files?.ration_id?.[0]?.buffer || null
@@ -42,6 +41,7 @@ const buildApplication = async (req, res, forUserId) => {
 
 // USER applies for self
 exports.userApplyJanarogya = (req, res) => buildApplication(req, res, req.user.id);
+
 
 // EMPLOYEE applies for others
 exports.applyJanarogya = (req, res) => {

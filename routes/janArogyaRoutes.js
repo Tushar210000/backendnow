@@ -30,7 +30,7 @@ router.get(
   authorizeRole("USER"),
   janCtrl.getUserApplication
 );
-router.get("/check",auth,authorizeRole("USER"),janCtrl.checkJanarogya)
+router.get("/check",auth,janCtrl.checkJanarogya)
 /**
  * ================================
  * EMPLOYEE ROUTES

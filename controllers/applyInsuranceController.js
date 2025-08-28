@@ -3,13 +3,16 @@ const ApplyInsurance = require("../model/applyInsurance");
 // Common apply logic
 const buildInsuranceApplication = async (req, res, forUserId) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const {
       fullName, dob, gender, email, phoneNumber,
       aadhaarNumber, address, state, district,
       pincode, insuranceType
     } = req.body;
-
+     const existing=await ApplyInsurance.findOne({aadhaarNumber})
+     if(existing){
+      return res.status(400).json({message:"Already Applied For Insurance Please Wait For Admin"})
+     }
     const app = new ApplyInsurance({
       fullName,
       dob,

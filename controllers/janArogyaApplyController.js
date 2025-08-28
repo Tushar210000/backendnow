@@ -1,13 +1,17 @@
+const janArogyaApply = require("../model/janArogyaApply");
 const JanArogyaApply = require("../model/janArogyaApply");
 
 // Internal builder (for self or on behalf)
 const buildApplication = async (req, res, forUserId) => {
   try {
     const { 
-      name, email, phone, address, businessType, investmentCapacity,
+      name, aadhaar, phone, address, businessType, investmentCapacity,
       proposedLocation, franchiseCategory, category, relevantExperience
     } = req.body;
-
+     const existing=await janArogyaApply.findOne({forUserId})
+     if(existing){
+      return res.status(400).json({message:"User Already Applied"})
+     }
     const application = new JanArogyaApply({
       name,
       email,

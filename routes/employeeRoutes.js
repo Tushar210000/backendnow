@@ -1,10 +1,19 @@
+// routes/employeeRoutes.js
 const express = require("express");
+const { getEmployeeProfile, getEmployeeAppliedUsers } = require("../controllers/employeeController");
+
+const { auth,authorizeRole } = require("../middlewares/auth");
+
 const router = express.Router();
-const { createEmployee } = require("../controllers/employeeController");
-const { auth, authorizeRole } = require("../middlewares/auth");
 
+// Only Employees can view their profile
+router.get(
+  "/profile",
+  auth,
+  authorizeRole("EMPLOYEE"),
+  getEmployeeProfile
+);
+router.get("/applied-by-me",auth,authorizeRole("EMPLOYEE"),getEmployeeAppliedUsers)
 
-// Admin creates employee
-router.post("/create", auth,authorizeRole("ADMIN"), createEmployee);
 
 module.exports = router;

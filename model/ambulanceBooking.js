@@ -7,7 +7,7 @@ const ambulanceBookingSchema = new mongoose.Schema({
   hospitalPreference: { type: String, required: true },
   appointmentDate: { type: Date, required: true },
   preferredTime: { type: String, required: true },
-  message: { type: String },
+  message: { type: String }, 
 //   area: { type: String, required: true }, // fixed
   appliedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   forUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

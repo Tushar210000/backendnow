@@ -1,56 +1,80 @@
-
-
-// Create Employee (Admin Only)
+// controllers/employeeController.js
 const User = require("../model/user");
-const bcrypt = require("bcrypt");
-
-
-// Create Employee (Admin Only)
-exports.createEmployee = async (req, res) => {
+// const mongoose=require("mongoose")
+const AmbulanceBooking = require("../model/ambulanceBooking");
+const ApplyInsuranceApplication = require("../model/applyInsurance");
+const JanArogyaApplication = require("../model/janArogyaApplication");
+const JanArogyaApply = require("../model/janArogyaApply");
+exports.getEmployeeProfile = async (req, res) => {
   try {
-    // Ensure only Admin can create employees
-   
+    // req.user.id comes from auth middleware after verifying JWT
+    const employeeId = req.user.id;
 
-    const { name, phone, password, employeeId, email } = req.body;
-
-    if (!name || !phone || !password || !employeeId || !email) {
-      return res.status(400).json({ message: "All fields are required" });
+    const employee = await User.findById(employeeId).select("-password");
+    if (!employee || employee.role !== "EMPLOYEE") {
+      return res.status(404).json({ message: "Employee not found" });
     }
 
-    // Check if employeeId already exists
-    const existingEmployeeId = await User.findOne({ employeeId });
-    if (existingEmployeeId) {
-      return res.status(400).json({ message: "Employee ID already exists" });
-    }
-
-    // Check if phone already exists
-    const existingPhone = await User.findOne({ phone });
-    if (existingPhone) {
-      return res.status(400).json({ message: "Phone number already exists" });
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create employee with role EMPLOYEE
-    const newEmployee = new User({
-      name,
-      phone,
-      password: hashedPassword,
-      role: "EMPLOYEE",
-      employeeId,
-      email,
-      verified: true // Add an approval flag
-    });
-
-    await newEmployee.save();
-
-    res.status(201).json({
-      message: "Employee created successfully. Pending admin approval.",
-      employee: newEmployee
+    res.status(200).json({
+      message: "Employee profile fetched successfully",
+      profile: employee,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching employee profile:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
+
+
+
+
+
+
+exports.getEmployeeAppliedUsers = async (req, res) => {
+  try {
+    const employeeId = req.user._id;
+
+    // Fetch all applications with populated forUser
+    const ambulance = await AmbulanceBooking.find({ appliedBy: employeeId }).populate("forUser", "name phone email");
+    const insurance = await ApplyInsuranceApplication.find({ appliedBy: employeeId }).populate("forUser", "name phone email");
+    const janArogya = await JanArogyaApplication.find({ appliedBy: employeeId }).populate("forUser", "name phone email");
+    const janArogyaApply = await JanArogyaApply.find({ appliedBy: employeeId }).populate("forUser", "name phone email");
+
+    // Flatten into desired format
+    const appliedUsers = [
+      ...ambulance.map(a => ({
+        name: a.fullName,
+        email: a.email,
+        phone: a.phone,
+        service: "AmbulanceBooking"
+      })),
+      ...insurance.map(i => ({
+        name: i.fullName,
+        email: i.email,
+        phone: i.phone,
+        service: "ApplyInsurance"
+      })),
+      ...janArogya.map(j => ({
+        name: j.name,
+        email: j.email,
+        phone: j.phone,
+        service: "JanArogyaApplication"
+      })),
+      ...janArogyaApply.map(j => ({
+        name: j.name,
+        email: j.email,
+        phone: j.phone,
+        service: "JanArogyaApply"
+      }))
+    ];
+
+    res.json({ success: true, appliedUsers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+
+

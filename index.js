@@ -31,7 +31,7 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // serve uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
 
 // DB Connection
 connectDB();
@@ -39,14 +39,14 @@ connectDB();
 // Routes
 app.use("/api/popup", popupRoutes);
 app.use("/api/states/", statesRouter);
-app.use("/api/users", userRoutes);
+// app.use("/api/users", userRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/services/janarogya", janArogyaRoutes);
 app.use("/api/services/ambulance-booking", ambulanceRoutes);
 app.use("/api/services/apply-insurance", applyInsurance);
 app.use("/api/services/apply-kendra", applyKendra);
-app.use("/api/employee/", employeeRoutes);
+app.use("/api/employee", employeeRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin",dashBoardRoutes)
 app.use("/api/u",profileRoutes)

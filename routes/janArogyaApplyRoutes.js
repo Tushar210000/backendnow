@@ -28,7 +28,7 @@ router.post(
 
 // EMPLOYEE applies on behalf of user
 router.post(
-  "/apply-on-behalf",
+  "/employee/apply",
   auth,
   authorizeRole("EMPLOYEE"),
   upload.fields([

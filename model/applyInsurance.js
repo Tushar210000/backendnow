@@ -4,6 +4,7 @@ const applyInsuranceSchema = new mongoose.Schema({
   fullName: String,
   dob: String,
   gender: String,
+  phone:String,
   email: String,
   phoneNumber: String,
   aadhaarNumber: String,
