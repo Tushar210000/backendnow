@@ -17,6 +17,8 @@ const employeeRoutes = require("./routes/employeeRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const dashBoardRoutes=require("./routes/dashBoardRoutes")
 const profileRoutes=require("./routes/profileRoutes")
+const attendanceRoutes=require("./routes/attendanceRoutes")
+
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -50,5 +52,6 @@ app.use("/api/employee", employeeRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin",dashBoardRoutes)
 app.use("/api/u",profileRoutes)
+app.use("/api/attendance",attendanceRoutes)
 // Start server
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
